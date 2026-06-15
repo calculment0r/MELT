@@ -72,26 +72,20 @@
     top: 18px;
     right: 18px;
     z-index: 10001;
+    width: 36px;
+    height: 36px;
     background: var(--bg2);
     color: var(--text);
     border: 1px solid var(--border2);
-    padding: 8px 14px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    padding: 0;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
   }
   .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-  .theme-toggle .tt-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
+  .theme-toggle svg { display: block; width: 18px; height: 18px; }
 
   .progress-bar {
     position: fixed;
@@ -340,9 +334,11 @@
 
 <div class="progress-bar" id="prog"></div>
 
-<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème">
-  <span class="tt-dot"></span>
-  <span id="themeLabel">Mode sombre</span>
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème" title="Basculer le thème">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>
+  </svg>
 </button>
 
 <div class="container">
@@ -686,7 +682,6 @@
 
   const root = document.documentElement;
   const toggle = document.getElementById('themeToggle');
-  const label = document.getElementById('themeLabel');
   const saved = localStorage.getItem('theme') || 'light';
   applyTheme(saved);
   toggle.addEventListener('click', () => {
@@ -696,7 +691,6 @@
   });
   function applyTheme(t) {
     root.setAttribute('data-theme', t);
-    label.textContent = t === 'dark' ? 'Mode clair' : 'Mode sombre';
   }
 </script>
 
