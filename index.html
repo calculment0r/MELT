@@ -7,7 +7,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
+  :root,
+  [data-theme="light"] {
+    --bg: #f7f5ef;
+    --bg2: #ece9df;
+    --bg3: #e2decf;
+    --border: #d0ccbb;
+    --border2: #b8b39c;
+    --text: #1a1a1f;
+    --muted: #4a4a55;
+    --dim: #8a8a92;
+    --accent: #4a7a00;
+    --accentDim: #2f5200;
+    --red: #c4283a;
+    --amber: #a86a00;
+    --blue: #1f5fc4;
+    --violet: #6a3fb8;
+    --noise-opacity: 0.18;
+  }
+
+  [data-theme="dark"] {
     --bg: #0a0a0c;
     --bg2: #111114;
     --bg3: #18181d;
@@ -22,6 +41,7 @@
     --amber: #ffaa33;
     --blue: #4499ff;
     --violet: #9966ff;
+    --noise-opacity: 0.35;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,6 +54,7 @@
     font-size: 18px;
     line-height: 1.8;
     min-height: 100vh;
+    transition: background 0.25s ease, color 0.25s ease;
   }
 
   body::before {
@@ -43,7 +64,33 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.35;
+    opacity: var(--noise-opacity);
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10001;
+    background: var(--bg2);
+    color: var(--text);
+    border: 1px solid var(--border2);
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle .tt-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
   }
 
   .progress-bar {
@@ -292,6 +339,11 @@
 <body>
 
 <div class="progress-bar" id="prog"></div>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème">
+  <span class="tt-dot"></span>
+  <span id="themeLabel">Mode sombre</span>
+</button>
 
 <div class="container">
 
@@ -631,6 +683,21 @@
     const total = document.documentElement.scrollHeight - window.innerHeight;
     prog.style.width = (window.scrollY / total * 100) + '%';
   }, { passive: true });
+
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  const saved = localStorage.getItem('theme') || 'light';
+  applyTheme(saved);
+  toggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('theme', next);
+  });
+  function applyTheme(t) {
+    root.setAttribute('data-theme', t);
+    label.textContent = t === 'dark' ? 'Mode clair' : 'Mode sombre';
+  }
 </script>
 
 </body>
